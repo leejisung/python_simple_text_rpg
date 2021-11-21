@@ -6,7 +6,7 @@ class inv_make():
             return False
         self.item_list.append(item)
         return True
-    def use_itme(self, num):
+    def use_item(self, num):
         self.item_list[num].effect()
         del self.item_list[num]
 
