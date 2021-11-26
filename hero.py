@@ -20,6 +20,7 @@ class hero_make():
             self.max_mp+=5
             self.attack+=5
             self.defend+=2
+            print("레벨업")
     
 
 

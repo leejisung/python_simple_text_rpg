@@ -106,8 +106,47 @@ def battle(spot):
         return;
     monster_list = spot.monster
     monster = rd.choice(monster_list)
+    monster_hp = monster.hp
     name = monster.name
     print("야생의 {} 이(가) 나타났다.".format(name))
+    while(1):
+        if hero.hp<=0:
+            return;
+        if monster_hp<=0:
+            level = hero.level
+            hero.gain_exp(monster.exp)
+            if level != hero.level:
+                print("레벨업을 하였습니다.")
+            return;
+        while(1):
+            print("내 HP {}, 내 MP {}".format(hero.hp, hero.mp))
+            print("적 HP {}".format(monster_hp))
+            print("1 공격(mp가 많을수록 명중률 증가), 2 스킬(mp 10 소모)")
+            command = input()
+            if command == "1":
+                dice = rd.randrange(max(hero.mp,int(hero.max_mp/2)))
+                if dice*3 <hero.max_mp:
+                    print("빚맞췄다.")
+                else:
+                    damage = hero.attack
+                    monster_hp-=damage
+                    print("{} 데미지".format(damage))
+            elif command == "2":
+                if hero.mp>=10:
+                    hero.mp-=10
+                else:
+                    print("mp가 부족하다")
+                    continue
+                damage = hero.attack*2
+                monster_hp-=damage
+                print("{} 데미지".format(damage))
+            else:
+                print("잘못된 입력입니다.")
+                continue
+            if monster_hp<=0:
+                print("이겼다.")
+                hero.gain_exp(monster.exp)
+                return;
 
 while(1):
     four_dir = {'동' : my_location.east, '서': my_location.west, '남' : my_location.south, '북' : my_location.north}
