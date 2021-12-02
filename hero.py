@@ -18,6 +18,8 @@ class hero_make():
             self.level+=1
             self.max_hp+=10
             self.max_mp+=5
+            self.hp = self.max_hp
+            self.mp = self.max_mp
             self.attack+=5
             self.defend+=2
             print("레벨업")

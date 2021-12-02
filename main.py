@@ -48,7 +48,7 @@ north_spot1.monster_append(goblin)
 north_spot1.regen_change(5)
 north_spot2.monster_append(goblin)
 north_spot2.regen_change(5)
-north_spot3.monster_append(goblin)
+north_spot3.monster_append(orc)
 north_spot3.regen_change(5)
 
 
@@ -146,9 +146,22 @@ def battle(spot):
             if monster_hp<=0:
                 print("이겼다.")
                 hero.gain_exp(monster.exp)
+                x = inv.gain_item(monster.item)
+                return;
+            damage = monster.atk
+            damage -= hero.defend
+            if damage<=0:
+                print("근육으로 튕겨냈다")
+            else:
+                hero.hp -=damage
+            if hero.hp<=0:
+                print("졌다.")
                 return;
 
 while(1):
+    if hero.hp<=0:
+        print("죽었다.")
+        break
     four_dir = {'동' : my_location.east, '서': my_location.west, '남' : my_location.south, '북' : my_location.north}
     print(my_location.explain)
     while(1):
