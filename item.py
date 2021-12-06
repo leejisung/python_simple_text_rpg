@@ -15,6 +15,7 @@ class inv_make():
         del self.item_list[num]
 
 class item_make():
-    def __init__(self,name,effect):
+    def __init__(self,name,effect, price):
         self.name = name
         self.effect = effect
+        self.price = price 

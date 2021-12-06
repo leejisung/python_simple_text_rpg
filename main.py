@@ -6,18 +6,18 @@ import random as rd
 hero = hero.hero_make('me')
 inv = item.inv_make()
 
-GOLD = 0
+GOLD = 20
 #### 아이템 설정
 def hp_potion_effect():
     hero.hp = min(hero.max_hp, hero.hp+50)
-hp_potion = item.item_make("HP포션",hp_potion_effect)
+hp_potion = item.item_make("HP포션",hp_potion_effect, 10)
 def mp_potion_effect():
-    hero.hp = min(hero.max_hp, hero.hp+50)
-mp_potion = item.item_make("MP포션",mp_potion_effect)
+    hero.mp = min(hero.max_mp, hero.mp+50)
+mp_potion = item.item_make("MP포션",mp_potion_effect, 10)
 
-orc_teeth = item.item_make("오크이빨",None)
-goblin_teeth = item.item_make("고블린이빨",None)
-slime_mass = item.item_make("슬라임덩어리",None)
+orc_teeth = item.item_make("오크이빨",None, 10)
+goblin_teeth = item.item_make("고블린이빨",None, 5)
+slime_mass = item.item_make("슬라임덩어리",None, 1)
 
 
 inv.start_item(hp_potion)
@@ -29,8 +29,7 @@ orc = spot_maker.monster("오크", 10, 100, 10, orc_teeth)
 goblin = spot_maker.monster("고블린", 2, 30, 5, goblin_teeth)
 slime = spot_maker.monster("슬라임", 2, 30, 1, slime_mass)
 
-#### npc 설정
-fairy = spot_maker.npc("요정", "안녕 난 요정이야.")
+
 
 ####맵 설정 
 spot = spot_maker.spot
@@ -58,7 +57,7 @@ north_spot2.regen_change(5)
 north_spot3.monster_append(orc)
 north_spot3.regen_change(5)
 
-start_spot.set_npc(fairy)
+
 
 
 
@@ -167,6 +166,61 @@ def battle(spot):
                 print("졌다.")
                 return;
 
+def cell():
+    global GOLD
+    def view():
+        if len(inv.item_list)==0:
+            print("아이템이 없습니다.")
+            return 0
+        print("아이템 목록")
+        for i in range(len(inv.item_list)):
+            print(i+1, inv.item_list[i].name)
+        return 1
+    x = view()
+    if x==0:
+        return
+    print("팔 아이템의 번호는?")
+    try:
+        d_num = int(input())
+        price = inv.item_list[d_num-1].price
+        name = inv.item_list[d_num-1].name
+        GOLD += price
+        del inv.item_list[d_num-1]
+        print(name +" 를 팔았다.")
+        print(str(price) +"골드를 벌었다.")
+    except:
+        print("잘못된 접근입니다.")
+def buy(item_list):
+    global GOLD
+    if len(inv.item_list)>10:
+        print("가방이 가득 차 보이네.")
+        return;
+    price_list = {}
+    garget_list = {}
+    for i in range(len(item_list)):
+        print(i+1, item_list[i].name ,item_list[i].price*2, "골드")
+        price_list[str(i+1)] = (item_list[i].price*2)
+        garget_list[str(i+1)] = item_list[i]
+    print("어떤 물거을 살 거야?")
+    xxx = input()
+    if xxx in price_list:
+        if price_list[xxx]<=GOLD:
+            GOLD-=price_list[xxx]
+            inv.gain_item(garget_list[xxx])
+        else:
+            print("돈이 모잘라.")
+    else:
+        print("안녕.")
+    
+        
+        
+#### npc 설정
+fairy = spot_maker.npc("요정", "안녕 난 요정이야.")
+fairy.cell = cell
+fairy.trade_list = [hp_potion, mp_potion]
+fairy.buy = buy
+start_spot.set_npc(fairy)
+
 while(1):
     if hero.hp<=0:
         print("죽었다.")
@@ -198,4 +252,5 @@ while(1):
                 my_location.npc[ind].talk()
             else:
                 print("잘못된 명령이다.")
+
 

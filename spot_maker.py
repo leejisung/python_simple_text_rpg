@@ -50,24 +50,19 @@ class npc():
         self.start_talk = start_talk
         self.trade_list = []
         self.quest_list = []
-    def trade_insert(self, item, price):
-        self.trade_list.append((item, price))
     def talk(self):
         print(self.start_talk)
         t = False
-        q = False
+        print("1 : 팔기")
         if len(self.trade_list)!=0:
-            print("1 : 거래하기")
+            print("2 : 사기")
             t = True
-        if len(self.quest_list)!=0:
-            print("2 : 퀘스트")
-            q = True
         print("나가려면 아무키나 누르시오.")
         i = input()
-        if i=="1" and t:
-            self.trade()
-        if i=="2" and q:
-            self.quest()
+        if i=="1":
+            self.cell()
+        if i=="2" and len(self.trade_list)!=0:
+            self.buy(self.trade_list)
         else:
             return;
 
