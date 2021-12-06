@@ -5,6 +5,8 @@ import random as rd
 
 hero = hero.hero_make('me')
 inv = item.inv_make()
+
+GOLD = 0
 #### 아이템 설정
 def hp_potion_effect():
     hero.hp = min(hero.max_hp, hero.hp+50)
@@ -17,14 +19,19 @@ orc_teeth = item.item_make("오크이빨",None)
 goblin_teeth = item.item_make("고블린이빨",None)
 slime_mass = item.item_make("슬라임덩어리",None)
 
-inv.gain_item(hp_potion)
-inv.gain_item(mp_potion)
+
+inv.start_item(hp_potion)
+inv.start_item(mp_potion)
 ##############
 
 #### 몬스터 설정
 orc = spot_maker.monster("오크", 10, 100, 10, orc_teeth)
 goblin = spot_maker.monster("고블린", 2, 30, 5, goblin_teeth)
 slime = spot_maker.monster("슬라임", 2, 30, 1, slime_mass)
+
+#### npc 설정
+fairy = spot_maker.npc("요정", "안녕 난 요정이야.")
+
 ####맵 설정 
 spot = spot_maker.spot
 start_spot = spot('start')
@@ -50,6 +57,8 @@ north_spot2.monster_append(goblin)
 north_spot2.regen_change(5)
 north_spot3.monster_append(orc)
 north_spot3.regen_change(5)
+
+start_spot.set_npc(fairy)
 
 
 
@@ -164,6 +173,7 @@ while(1):
         break
     four_dir = {'동' : my_location.east, '서': my_location.west, '남' : my_location.south, '북' : my_location.north}
     print(my_location.explain)
+    npc_list = list(map(lambda x: x.name, my_location.npc))
     while(1):
         command = input()
         if command in four_dir and four_dir[command]!= None:
@@ -178,10 +188,14 @@ while(1):
                 print("공격력",hero.attack)
                 print("HP",hero.max_hp,"/",hero.hp)
                 print("MP",hero.max_mp,"/",hero.mp)
-                print("EXP",hero.level*10,"/",hero.exp)
+                print("EXP",hero.level*10,"/",hero.exp)                
+            elif command == "가진돈":
+                print("가진돈 :", GOLD, "골드")
             elif command == "아이템":
                 item_view()
-                break
+            elif command in npc_list:
+                ind = npc_list.index(command)
+                my_location.npc[ind].talk()
             else:
                 print("잘못된 명령이다.")
-    
+

@@ -8,6 +8,8 @@ class inv_make():
         self.item_list.append(item)
         print("{} 을(를) 얻었다.".format(item.name))
         return True
+    def start_item(self, item):
+        self.item_list.append(item)
     def use_item(self, num):
         self.item_list[num].effect()
         del self.item_list[num]
@@ -16,6 +18,3 @@ class item_make():
     def __init__(self,name,effect):
         self.name = name
         self.effect = effect
-i = item_make("i",sum)
-inv = inv_make()
-inv.gain_item(i)
